@@ -4,14 +4,35 @@ checks an IP for connectivity and changes title of
 cmd window accordingly. It will also play a error
 noise when the network goes down. 
 """
-
+import argparse
 import socket
 import time
 import winsound
 from os import system
 
-# External IP of server
-dnsip = '127.0.0.1' #Left out IP, needs to be an IP of a webserver 
+# Argument Parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("-s","-server", help="The IP or Domain Name of the server to monitor")
+parser.add_argument("--watch", action="store_true", help="Watches server until application closes")
+args = parser.parse_args()
+
+# 
+server = args.s
+
+if server == None:
+    print("No IP or Host provided, exiting...")
+    exit(0)
+
+try:
+    IP = socket.gethostbyname(server)
+except socket.gaierror:
+    print("Incorrect server name or IP provided, exiting...")
+    exit(0)
+except:
+    print("Unknown error has occured, check credentials and try again")
+    exit(0)
+
+# initalize some more variables
 port = 80
 system('title Up or Not')
 
@@ -24,7 +45,7 @@ def checkI():
                 print("Connecting to External IP...")
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 try:
-                        s.connect((dnsip, port))
+                        s.connect((IP, port))
                         s.shutdown(2)
                         s.close()
                         print("Online!\n")
@@ -34,7 +55,7 @@ def checkI():
                                 break
                 except socket.error as e:
                         print("Cannot connect to ")
-                        print(dnsip, " on port:", str(port))
+                        print(IP, " on port:", str(port))
                         print(e)
                         #Play exclamation sound when internet goes down
                         winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
@@ -42,6 +63,8 @@ def checkI():
                         if isDownShown == 0:
                                 system('title OFFLINE')
                         isDownShown = 1
+                if not args.watch:
+                    exit(0)
                 time.sleep(5);
 while(1):
         checkI()
