@@ -48,9 +48,7 @@ def checkI():
         s.shutdown(2)
         s.close()
         print("Online!\n")
-        if isDownShown == 1:
-            system('title ONLINE :)')
-            isDownShown = 0
+        system('title ONLINE')
     except socket.error as e:
         print("Cannot connect to ")
         print(IP, " on port:", str(port))
@@ -58,9 +56,8 @@ def checkI():
         #Play exclamation sound when internet goes down
         winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
-        if isDownShown == 0:
-            system('title OFFLINE')
-        isDownShown = 1
+        system('title OFFLINE')
+
     if not args.watch:
         exit(0)
         
