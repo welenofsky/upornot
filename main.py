@@ -60,7 +60,14 @@ def checkI():
 
     if not args.watch:
         exit(0)
-        
+def logSys():
+	file = open('sysl.txt', 'a')
+	file.write("Boot Log - System Awake: ")
+	file.write(time.strftime("%b %d, %Y %I:%M:%S"))
+	file.write('\n')
+	file.closed
+
+logSys()
 while 1:
     checkI()
     # Set to re-loop every 30 seconds if --watch passed
