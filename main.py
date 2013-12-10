@@ -35,12 +35,14 @@ except:
 # initalize some more variables
 port = 80
 system('title Up or Not')
+isOnline = "no"
 
 # Beef of the program, checks for active internet connection.
 def checkI():
+    system('cls')
     isDownShown = 0
+    global isOnline
     localtime = time.asctime(time.localtime(time.time()))
-    print(localtime)
     print("Connecting to External IP...")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -49,6 +51,9 @@ def checkI():
         s.close()
         print("Online!\n")
         system('title ONLINE')
+        if isOnline == "no":
+            isOnline = "yes"
+            logSys("inetstat",localtime)
     except socket.error as e:
         print("Cannot connect to ")
         print(IP, " on port:", str(port))
@@ -57,17 +62,26 @@ def checkI():
         winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         system('title OFFLINE')
-
+        if isOnline == "yes":
+            isOnline = "no"
+            logSys("inetstat",localtime)
+            
     if not args.watch:
         exit(0)
-def logSys():
-	file = open('sysl.txt', 'a')
-	file.write("Boot Log - System Awake: ")
-	file.write(time.strftime("%b %d, %Y %I:%M:%S"))
-	file.write('\n')
-	file.closed
+    print("Last check:", localtime)
 
-logSys()
+def logSys(message, timestamp):
+    logfile = open('sysl.txt', 'a')
+    if message == "inetstat":
+        if isOnline == "yes":
+            logfile.write("The host is online " + timestamp + '\n')
+        else:
+            logfile.write("The host is offline " + timestamp + '\n')
+    elif message == "logboot":
+        logfile.write("Boot Log - System Awake: " + timestamp + '\n')    
+    logfile.closed
+
+logSys("logboot", (time.asctime(time.localtime(time.time()))))
 while 1:
     checkI()
     # Set to re-loop every 30 seconds if --watch passed
