@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 """
 This is my web server baby monitor, currently only
 checks an IP for connectivity and changes title of
@@ -7,8 +9,8 @@ noise when the network goes down.
 import argparse
 import socket
 import time
-import winsound
-from os import system
+import pyglet
+import os
 
 # Argument Parsing
 parser = argparse.ArgumentParser()
@@ -32,25 +34,38 @@ except:
     print("Unknown error has occured, check credentials and try again")
     exit(0)
 
+sound = pyglet.resource.media('alert.wav', streaming=False)
+
+def title_or_echo(title):
+    if os.name == 'nt':
+        system('title ' + title)
+    else:
+        pass
+
 # initalize some more variables
 port = 80
-system('title Up or Not')
+title_or_echo('Up or Not')
 isOnline = "no"
 
 # Beef of the program, checks for active internet connection.
 def checkI():
-    system('cls')
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
     isDownShown = 0
     global isOnline
     localtime = time.asctime(time.localtime(time.time()))
     print("Connecting to External IP...")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
+        s.settimeout(10)
         s.connect((IP, port))
         s.shutdown(2)
         s.close()
         print("Online!\n")
-        system('title ONLINE')
+        title_or_echo('ONLINE')
         if isOnline == "no":
             isOnline = "yes"
             logSys("inetstat",localtime)
@@ -59,9 +74,10 @@ def checkI():
         print(IP, " on port:", str(port))
         print(e)
         #Play exclamation sound when internet goes down
-        winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
-        winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
-        system('title OFFLINE')
+        sound.play()
+        sound.play()
+        title_or_echo('OFFLINE')
+        time.sleep(5)
         if isOnline == "yes":
             isOnline = "no"
             logSys("inetstat",localtime)
