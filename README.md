@@ -16,7 +16,9 @@ If you are able to connect to the remote server a local time stamp and status wi
 that it connected alright. If it is not able to connect it will play a Windows notification sound to alert you that 
 you have been disconnected or the server is offline. It will also change the title of the window to reflect the current status of the server. This utility does not 100% verify a servers uptime, it can only tell you your personal ability to connect to a server.
 
-note: this is currently being ported to all operating systems but currently invokes some windows only functionality. 
+Tested and compatible with Windows / Linux
+
+Should also work on Mac but untested.
 
 
 alert.wav is under the Creative Commons 0 License ( https://creativecommons.org/publicdomain/zero/1.0/ )
