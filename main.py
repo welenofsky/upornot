@@ -14,7 +14,7 @@ import os
 
 
 # Beef of the program, checks for active internet connection.
-def checkI(IP, port, isOnline):
+def checkI(IP, port, isOnline, sound):
     if os.name == 'nt':
         os.system('cls')
     else:
@@ -38,8 +38,10 @@ def checkI(IP, port, isOnline):
         print("Cannot connect to ")
         print(IP, " on port:", str(port))
         print(e)
-        #Play exclamation sound when internet goes down
+        # Play exclamation sound when internet goes down
         sound.play()
+        # Give some time to play one sound before playing another
+        time.sleep(1)
         sound.play()
         title_or_pass('OFFLINE')
         time.sleep(5)
@@ -101,7 +103,7 @@ def main():
 
     logSys("logboot", (time.asctime(time.localtime(time.time()))), isOnline)
     while 1:
-        checkI(IP, port, isOnline)
+        checkI(IP, port, isOnline, sound)
         if not args.watch:
             exit(0)
 
