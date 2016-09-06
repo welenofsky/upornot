@@ -75,11 +75,17 @@ def main():
     # Argument Parsing
     parser = argparse.ArgumentParser()
     parser.add_argument("-s","-server", help="The IP or Domain Name of the server to monitor")
+    parser.add_argument("-d","-delay", help="Delay in seconds between checks")
     parser.add_argument("--watch", action="store_true", help="Watches server until application closes")
     args = parser.parse_args()
 
-    # 
-    server = args.s
+    server  = args.s
+    delay   = args.d
+
+    if delay != None and delay.isdigit():
+        delay = int(delay)
+    else:
+        delay = 30
 
     if server == None:
         print("No IP or Host provided, exiting...")
@@ -108,7 +114,7 @@ def main():
             exit(0)
 
         # Set to re-loop every 30 seconds if --watch passed
-        time.sleep(30)
+        time.sleep(delay)
 
 
 main()
