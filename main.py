@@ -20,7 +20,6 @@ def checkI(IP, port, isOnline, sound):
     else:
         os.system('clear')
 
-    isDownShown = 0
     localtime = time.asctime(time.localtime(time.time()))
     print("Connecting to External IP...")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,23 +30,24 @@ def checkI(IP, port, isOnline, sound):
         s.close()
         print("Online!\n")
         title_or_pass('ONLINE')
-        if isOnline == "no":
-            isOnline = "yes"
-            logSys("inetstat",localtime,isOnline)
+        if not isOnline:
+            isOnline = True
+            logSys("inetstat", localtime, isOnline)
+
     except socket.error as e:
         print("Cannot connect to ")
         print(IP, " on port:", str(port))
         print(e)
-        # Play exclamation sound when internet goes down
+        # Play alert sound when internet goes down
         sound.play()
         # Give some time to play one sound before playing another
         time.sleep(1)
         sound.play()
         title_or_pass('OFFLINE')
         time.sleep(5)
-        if isOnline == "yes":
-            isOnline = "no"
-            logSys("inetstat",localtime)
+        if isOnline:
+            isOnline = False
+            logSys("inetstat", localtime)
 
     print("Last check:", localtime)
 
@@ -105,7 +105,7 @@ def main():
     # initalize some more variables
     port = 80
     title_or_pass('Up or Not')
-    isOnline = "no"
+    isOnline = False
 
     logSys("logboot", (time.asctime(time.localtime(time.time()))), isOnline)
     while 1:
