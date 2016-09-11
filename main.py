@@ -78,9 +78,9 @@ def logSys(message, timestamp, isOnline):
 def main():
     title_or_pass('Up or Not')
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-s","-server", help="The IP or Domain Name of the server to monitor")
-    parser.add_argument("-d","-delay", help="Delay in seconds between checks")
+    parser = argparse.ArgumentParser(description="Monitors a URL or IP address for connectivity on port 80.")
+    parser.add_argument("-s","-server", type=str, help="The IP or Domain Name of the server to monitor")
+    parser.add_argument("-d","-delay", type=int, help="Delay in seconds between checks")
     parser.add_argument("--watch", action="store_true", help="Watches server until application closes")
     args = parser.parse_args()
 
